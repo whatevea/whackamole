@@ -33,9 +33,9 @@ create(){
 
         key:"rise",
 
-        frames:this.anims.generateFrameNumbers('slots',{frames:[3,0,0,3]}),
+        frames:this.anims.generateFrameNumbers('slots',{frames:[3,0,3,5]}),
 
-        frameRate:15,
+        frameRate:7,
 
         repeat:0,
 

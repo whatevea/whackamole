@@ -11,7 +11,9 @@ export default class Slots {
         //Set interactive
         this.image.setInteractive();
         this.image.on("pointerdown",function(){
-            if(this.image.anims.currentAnim !== null &&this.image.anims.currentAnim.key==="rise") {
+         
+    
+            if(this.image.anims.currentFrame.index === 3 || this.image.anims.currentFrame.index === 0 ) {
                 //score logic
                 this.score();
                 console.log("scored")
