@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      #canvas {
+        display: none;
+        cursor: crosshair;
+      }
+    </style>
+  </head>
+  <body>
+    <input type="file" id="input" />
+    <input type="color" id="transparent-color-picker" />
+    <input type="color" id="picked-color-picker" disabled />
+    <button id="save-button">Save</button>
+    <canvas id="canvas"></canvas>
+    <script>
+      const input = document.getElementById("input");
+      const transparentColorPicker = document.getElementById("transparent-color-picker");
+      const pickedColorPicker = document.getElementById("picked-color-picker");
+      const saveButton = document.getElementById("save-button");
+      const canvas = document.getElementById("canvas");
+      const ctx = canvas.getContext("2d");
+      
+      input.addEventListener("change", function() {
+        const reader = new FileReader();
+        reader.onload = function() {
+          const img = new Image();
+          img.onload = function() {
+            canvas.width = img.width;
+            canvas.height = img.height;
+            ctx.drawImage(img, 0, 0);
+            
+            canvas.style.display = "block";
+          };
+          img.src = reader.result;
+        };
+        reader.readAsDataURL(input.files[0]);
+      });
+      
+      canvas.addEventListener("click", function(event) {
+        const x = event.offsetX;
+        const y = event.offsetY;
+        
+        const pixel = ctx.getImageData(x, y, 1, 1).data;
+        const color = "#" + ("0" + pixel[0].toString(16)).slice(-2) + 
+                      ("0" + pixel[1].toString(16)).slice(-2) + 
+                      ("0" + pixel[2].toString(16)).slice(-2);
+        
+        pickedColorPicker.value = color;
+      });
+      
+      saveButton.addEventListener("click", function() {
+        const selectedTransparentColor = transparentColorPicker.value;
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const pixels = imageData.data;
+        
+        for (let i = 0; i < pixels.length; i += 4) {
+          const r = pixels[i];
+          const g = pixels[i + 1];
+          const b = pixels[i + 2];
+          const a = pixels[i + 3];
+          
+          if (r === parseInt(selectedTransparentColor.substr(1, 2), 16) &&
+              g === parseInt(selectedTransparentColor.substr(3, 2), 16) &&
+              b === parseInt(selectedTransparentColor.substr(5, 2), 16)) {
+            pixels[i + 3] = 0;
+          }        }
+        
+        ctx.putImageData(imageData, 0, 0);
+        
+        const link = document.createElement("a");
+        link.download = "transparent-image.png";
+        link.href = canvas.toDataURL();
+        link.click();
+      });
+    </script>
+  </body>
+</html>
