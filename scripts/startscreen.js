@@ -4,9 +4,9 @@ constructor(){
 }
 preload(){
 
-    this.load.image("mountain","/assets/image.png");
-this.load.image("bg","/assets/bg.png")
-this.load.spritesheet("slots","/assets/125whack.png",{
+    this.load.image("mountain","assets/image.png");
+this.load.image("bg","assets/bg.png")
+this.load.spritesheet("slots","assets/125whack.png",{
     frameWidth:125,
     frameHeight:125
 })
